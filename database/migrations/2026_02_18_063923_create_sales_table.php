@@ -15,7 +15,7 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->string('g_number')->unique();
+            $table->string('g_number');
             $table->date('date')->index();
             $table->date('last_change_date')->nullable();
             $table->string('supplier_article')->nullable();
@@ -43,6 +43,8 @@ class CreateSalesTable extends Migration
             $table->string('brand')->nullable();
             $table->boolean('is_storno')->nullable();
             $table->timestamps();
+
+            $table->unique(['g_number','last_change_date','nm_id','is_storno']);
         });
     }
 

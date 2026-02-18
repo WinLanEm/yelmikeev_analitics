@@ -29,7 +29,7 @@ class CreateIncomesTable extends Migration
             $table->string('warehouse_name')->nullable();
             $table->timestamps();
 
-            $table->unique(['income_id', 'barcode']);
+            $table->unique(['income_id', 'barcode', 'tech_size', 'supplier_article']);
         });
     }
 
