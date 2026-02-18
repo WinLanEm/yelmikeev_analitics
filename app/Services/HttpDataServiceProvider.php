@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
+use App\Contracts\Services\DataServiceProvider;
 use App\DTOs\IncomeDTO;
 use App\DTOs\OrderDTO;
 use App\DTOs\SaleDTO;
 use App\DTOs\StockDTO;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
-final class ApiService
+final class HttpDataServiceProvider implements DataServiceProvider
 {
     private string $apiKey;
     private string $baseUrl;
@@ -18,43 +20,43 @@ final class ApiService
         $this->baseUrl = config('api.base_url');
     }
 
-    public function getSales(string $dateFrom, string $dateTo, int $page = 1, int $limit = 500): array
+    public function getSales(Carbon $dateFrom, Carbon $dateTo, int $page = 1, int $limit = 500): array
     {
         $data = $this->makeRequest('sales', [
-            'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo,
+            'dateFrom' => $dateFrom->format('Y-m-d'),
+            'dateTo' => $dateTo->format('Y-m-d'),
             'page' => $page,
             'limit' => $limit,
         ]);
         return array_map(fn($item) => SaleDTO::fromArray($item), $data);
     }
 
-    public function getOrders(string $dateFrom, string $dateTo, int $page = 1, int $limit = 500): array
+    public function getOrders(Carbon $dateFrom, Carbon $dateTo, int $page = 1, int $limit = 500): array
     {
         $data = $this->makeRequest('orders', [
-            'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo,
+            'dateFrom' => $dateFrom->format('Y-m-d'),
+            'dateTo' => $dateTo->format('Y-m-d'),
             'page' => $page,
             'limit' => $limit,
         ]);
         return array_map(fn($item) => OrderDTO::fromArray($item), $data);
     }
 
-    public function getIncomes(string $dateFrom, string $dateTo, int $page = 1, int $limit = 500): array
+    public function getIncomes(Carbon $dateFrom, Carbon $dateTo, int $page = 1, int $limit = 500): array
     {
         $data = $this->makeRequest('incomes', [
-            'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo,
+            'dateFrom' => $dateFrom->format('Y-m-d'),
+            'dateTo' => $dateTo->format('Y-m-d'),
             'page' => $page,
             'limit' => $limit,
         ]);
         return array_map(fn($item) => IncomeDTO::fromArray($item), $data);
     }
 
-    public function getStocks(string $dateFrom, int $page = 1, int $limit = 500): array
+    public function getStocks(Carbon $dateFrom, int $page = 1, int $limit = 500): array
     {
         $data = $this->makeRequest('stocks', [
-            'dateFrom' => $dateFrom,
+            'dateFrom' => $dateFrom->format('Y-m-d'),
             'page' => $page,
             'limit' => $limit,
         ]);
@@ -66,10 +68,9 @@ final class ApiService
     {
         $params['key'] = $this->apiKey;
 
-        $response = Http::get("{$this->baseUrl}/{$endpoint}", $params);
-
-        $response->throw();
-
-        return $response->json('data') ?? [];
+        return Http::retry(3, 1000)
+            ->get("{$this->baseUrl}/{$endpoint}", $params)
+            ->throw()
+            ->json('data') ?? [];
     }
 }
