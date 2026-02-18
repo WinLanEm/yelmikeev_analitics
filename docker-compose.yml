@@ -11,21 +11,4 @@ services:
             - "8000:8000"
         volumes:
             - ./:/var/www
-        depends_on:
-            - db
         command: php artisan octane:start --server=swoole --host=0.0.0.0 --port=8000 --watch
-
-    db:
-        image: mysql:8.0
-        container_name: laravel_db
-        restart: unless-stopped
-        environment:
-            MYSQL_DATABASE: ${DB_DATABASE}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-        ports:
-            - "3306:3306"
-        volumes:
-            - dbdata:/var/lib/mysql
-
-volumes:
-    dbdata:
