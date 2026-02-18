@@ -16,7 +16,6 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('g_number',50);
-            $table->char('row_hash', 32);
             $table->dateTime('date')->index();
             $table->date('last_change_date')->nullable();
             $table->string('supplier_article')->nullable();
