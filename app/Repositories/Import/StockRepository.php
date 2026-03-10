@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Import;
 
-use App\Contracts\Repositories\ImportRepository;
-use App\DTOs\StockDTO;
+use App\Contracts\Repositories\Import\ImportRepository;
+use App\DTOs\Import\StockDTO;
 use App\Models\Stock;
 
 final class StockRepository implements ImportRepository

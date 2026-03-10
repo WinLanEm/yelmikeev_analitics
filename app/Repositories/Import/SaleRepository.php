@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Import;
 
-use App\Contracts\Repositories\ImportRepository;
-use App\DTOs\SaleDTO;
+use App\Contracts\Repositories\Import\ImportRepository;
+use App\DTOs\Import\SaleDTO;
 use App\Models\Sale;
 
 final class SaleRepository implements ImportRepository

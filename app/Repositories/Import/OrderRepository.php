@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Import;
 
-use App\Contracts\Repositories\ImportRepository;
-use App\DTOs\OrderDTO;
+use App\Contracts\Repositories\Import\ImportRepository;
+use App\DTOs\Import\OrderDTO;
 use App\Models\Order;
 
 final class OrderRepository implements ImportRepository

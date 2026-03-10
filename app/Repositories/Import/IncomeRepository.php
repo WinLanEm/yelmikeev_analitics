@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Import;
 
-use App\Contracts\Repositories\ImportRepository;
-use App\DTOs\IncomeDTO;
+use App\Contracts\Repositories\Import\ImportRepository;
+use App\DTOs\Import\IncomeDTO;
 use App\Models\Income;
 
 final class IncomeRepository implements ImportRepository
