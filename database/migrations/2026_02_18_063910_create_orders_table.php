@@ -15,6 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('account_id')->constrained()->cascadeOnDelete();
             $table->string('g_number',50);
             $table->dateTime('date')->index();
             $table->date('last_change_date')->nullable();
@@ -36,7 +37,7 @@ class CreateOrdersTable extends Migration
             $table->timestamps();
 
             //эндпоинт из апи отдает полные дубликаты строк, у нас они удаляются, проверял полным хешированием данных
-            $table->unique(['g_number', 'nm_id','barcode', 'last_change_date', 'is_cancel','warehouse_name','date','oblast','total_price'],'order_unique_idx');
+            $table->unique(['account_id','g_number', 'nm_id','barcode', 'last_change_date', 'is_cancel','warehouse_name','date','oblast','total_price'],'orders_unique_idx');
         });
     }
 

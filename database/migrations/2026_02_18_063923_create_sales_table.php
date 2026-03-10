@@ -15,6 +15,7 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('account_id')->constrained()->cascadeOnDelete();
             $table->string('g_number');
             $table->date('date')->index();
             $table->date('last_change_date')->nullable();
@@ -44,7 +45,7 @@ class CreateSalesTable extends Migration
             $table->boolean('is_storno')->nullable();
             $table->timestamps();
 
-            $table->unique(['g_number','last_change_date','nm_id','is_storno']);
+            $table->unique(['account_id','g_number','last_change_date','nm_id','is_storno'],'sales_unique_idx');
         });
     }
 
