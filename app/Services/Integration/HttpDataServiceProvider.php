@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Integration;
 
 use App\Contracts\Services\DataServiceProvider;
-use App\DTOs\IncomeDTO;
-use App\DTOs\OrderDTO;
-use App\DTOs\SaleDTO;
-use App\DTOs\StockDTO;
+use App\DTOs\Import\IncomeDTO;
+use App\DTOs\Import\OrderDTO;
+use App\DTOs\Import\SaleDTO;
+use App\DTOs\Import\StockDTO;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 

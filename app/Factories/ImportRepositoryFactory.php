@@ -2,12 +2,12 @@
 
 namespace App\Factories;
 
-use App\Contracts\Repositories\ImportRepository;
+use App\Contracts\Repositories\Import\ImportRepository;
 use App\Enums\ApiEntity;
-use App\Repositories\IncomeRepository;
-use App\Repositories\OrderRepository;
-use App\Repositories\SaleRepository;
-use App\Repositories\StockRepository;
+use App\Repositories\Import\IncomeRepository;
+use App\Repositories\Import\OrderRepository;
+use App\Repositories\Import\SaleRepository;
+use App\Repositories\Import\StockRepository;
 use InvalidArgumentException;
 
 final class ImportRepositoryFactory

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Integration;
 
 use App\Contracts\Services\DataServiceProvider;
 use App\Enums\ApiEntity;

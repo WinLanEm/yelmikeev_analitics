@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Enums\ApiEntity;
 use App\Factories\ImportRepositoryFactory;
-use App\Services\ApiEntityFetcher;
+use App\Services\Integration\ApiEntityFetcher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
