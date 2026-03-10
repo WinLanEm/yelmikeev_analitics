@@ -15,6 +15,10 @@ class ApiToken extends Model
         'token_value',
     ];
 
+    protected $casts = [
+        'token_value' => 'encrypted',
+    ];
+
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);

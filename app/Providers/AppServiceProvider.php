@@ -2,14 +2,24 @@
 
 namespace App\Providers;
 
-use App\Contracts\Repositories\ImportRepository;
+use App\Contracts\Repositories\Core\Account\AccountRepository;
+use App\Contracts\Repositories\Core\ApiService\ApiServiceRepository;
+use App\Contracts\Repositories\Core\ApiToken\ApiTokenRepository;
+use App\Contracts\Repositories\Core\Company\CompanyRepository;
+use App\Contracts\Repositories\Core\TokenType\TokenTypeRepository;
+use App\Contracts\Repositories\Import\ImportRepository;
 use App\Contracts\Services\DataServiceProvider;
 use App\Contracts\Strategies\ImportData\ImportEntityStrategy;
-use App\Repositories\IncomeRepository;
-use App\Repositories\OrderRepository;
-use App\Repositories\SaleRepository;
-use App\Repositories\StockRepository;
-use App\Services\HttpDataServiceProvider;
+use App\Repositories\Core\Account\EloquentAccountRepository;
+use App\Repositories\Core\ApiService\EloquentApiServiceRepository;
+use App\Repositories\Core\ApiToken\EloquentApiTokenRepository;
+use App\Repositories\Core\Company\EloquentCompanyRepository;
+use App\Repositories\Core\TokenType\EloquentTokenTypeRepository;
+use App\Repositories\Import\IncomeRepository;
+use App\Repositories\Import\OrderRepository;
+use App\Repositories\Import\SaleRepository;
+use App\Repositories\Import\StockRepository;
+use App\Services\Integration\HttpDataServiceProvider;
 use App\Strategies\ImportDataStrategies\ImportIncomesStrategy;
 use App\Strategies\ImportDataStrategies\ImportOrdersStrategy;
 use App\Strategies\ImportDataStrategies\ImportSalesStrategy;
@@ -64,6 +74,31 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             DataServiceProvider::class,
             HttpDataServiceProvider::class
+        );
+
+        $this->app->bind(
+            AccountRepository::class,
+            EloquentAccountRepository::class,
+        );
+
+        $this->app->bind(
+            CompanyRepository::class,
+            EloquentCompanyRepository::class,
+        );
+
+        $this->app->bind(
+            ApiServiceRepository::class,
+            EloquentApiServiceRepository::class,
+        );
+
+        $this->app->bind(
+            ApiTokenRepository::class,
+            EloquentApiTokenRepository::class,
+        );
+
+        $this->app->bind(
+            TokenTypeRepository::class,
+            EloquentTokenTypeRepository::class,
         );
     }
 
