@@ -36,8 +36,7 @@ class CreateOrdersTable extends Migration
             $table->date('cancel_dt')->nullable();
             $table->timestamps();
 
-            //эндпоинт из апи отдает полные дубликаты строк, у нас они удаляются, проверял полным хешированием данных
-            $table->unique(['account_id','g_number', 'nm_id','barcode', 'last_change_date', 'is_cancel','warehouse_name','date','oblast','total_price'],'orders_unique_idx');
+            $table->char('row_hash',32)->unique();
         });
     }
 

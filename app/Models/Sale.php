@@ -39,6 +39,11 @@ class Sale extends Model
         'category',
         'brand',
         'is_storno',
+        'row_hash',
+    ];
+
+    protected $casts = [
+        'date' => 'datetime',
     ];
 
     public function account(): BelongsTo

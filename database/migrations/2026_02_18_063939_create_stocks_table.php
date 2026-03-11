@@ -35,9 +35,8 @@ class CreateStocksTable extends Migration
             $table->string('sc_code', 50)->nullable();
             $table->decimal('price', 12, 2)->default(0);
             $table->integer('discount')->default(0);
+            $table->char('row_hash',32)->unique();
             $table->timestamps();
-
-            $table->unique(['account_id','date', 'last_change_date', 'supplier_article', 'warehouse_name', 'nm_id', 'barcode', 'sc_code', 'tech_size'],'stocks_unique_ids');
         });
     }
 

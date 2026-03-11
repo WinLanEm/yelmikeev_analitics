@@ -31,6 +31,11 @@ class Stock extends Model
         'sc_code',
         'price',
         'discount',
+        'row_hash',
+    ];
+
+    protected $casts = [
+        'date' => 'datetime',
     ];
 
     public function account(): BelongsTo

@@ -28,9 +28,10 @@ class CreateIncomesTable extends Migration
             $table->integer('quantity')->default(0);
             $table->decimal('total_price', 12, 2)->default(0);
             $table->string('warehouse_name')->nullable();
-            $table->timestamps();
 
-            $table->unique(['account_id','income_id', 'barcode', 'tech_size', 'supplier_article'],'incomes_unique_idx');
+            $table->char('row_hash', 32)->unique();
+
+            $table->timestamps();
         });
     }
 

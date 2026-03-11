@@ -24,6 +24,11 @@ class Income extends Model
         'quantity',
         'total_price',
         'warehouse_name',
+        'row_hash',
+    ];
+
+    protected $casts = [
+        'date' => 'datetime',
     ];
 
     public function account(): BelongsTo

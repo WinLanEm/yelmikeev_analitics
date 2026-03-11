@@ -30,6 +30,11 @@ class Order extends Model
         'brand',
         'is_cancel',
         'cancel_dt',
+        'row_hash',
+    ];
+
+    protected $casts = [
+        'date' => 'datetime',
     ];
 
     public function account(): BelongsTo
