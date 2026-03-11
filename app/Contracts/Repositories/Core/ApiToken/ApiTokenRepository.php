@@ -7,5 +7,6 @@ use App\Models\ApiToken;
 
 interface ApiTokenRepository
 {
+    public function findByIdWithRelations(int $id): ApiToken;
     public function create(ApiTokenCreateDTO $dto):ApiToken;
 }
