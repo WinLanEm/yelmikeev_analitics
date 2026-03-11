@@ -10,16 +10,17 @@ use App\Contracts\Repositories\Core\TokenType\TokenTypeRepository;
 use App\Contracts\Repositories\Import\ImportRepository;
 use App\Contracts\Services\DataServiceProvider;
 use App\Contracts\Strategies\ImportData\ImportEntityStrategy;
+use App\Jobs\Import\ImportApiEntityJob;
 use App\Repositories\Core\Account\EloquentAccountRepository;
 use App\Repositories\Core\ApiService\EloquentApiServiceRepository;
 use App\Repositories\Core\ApiToken\EloquentApiTokenRepository;
 use App\Repositories\Core\Company\EloquentCompanyRepository;
 use App\Repositories\Core\TokenType\EloquentTokenTypeRepository;
-use App\Repositories\Import\IncomeRepository;
-use App\Repositories\Import\OrderRepository;
-use App\Repositories\Import\SaleRepository;
-use App\Repositories\Import\StockRepository;
-use App\Services\Integration\HttpDataServiceProvider;
+use App\Repositories\Import\EloquentIncomeRepository;
+use App\Repositories\Import\EloquentOrderRepository;
+use App\Repositories\Import\EloquentSaleRepository;
+use App\Repositories\Import\EloquentStockRepository;
+use App\Services\Integration\WbDataServiceProvider;
 use App\Strategies\ImportDataStrategies\ImportIncomesStrategy;
 use App\Strategies\ImportDataStrategies\ImportOrdersStrategy;
 use App\Strategies\ImportDataStrategies\ImportSalesStrategy;
@@ -39,19 +40,19 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             ImportRepository::class,
-            IncomeRepository::class
+            EloquentIncomeRepository::class
         );
         $this->app->bind(
             ImportRepository::class,
-            OrderRepository::class
+            EloquentOrderRepository::class
         );
         $this->app->bind(
             ImportRepository::class,
-            SaleRepository::class
+            EloquentSaleRepository::class
         );
         $this->app->bind(
             ImportRepository::class,
-            StockRepository::class
+            EloquentStockRepository::class
         );
 
         $this->app->bind(
@@ -73,7 +74,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             DataServiceProvider::class,
-            HttpDataServiceProvider::class
+            WbDataServiceProvider::class
         );
 
         $this->app->bind(
@@ -100,6 +101,22 @@ class AppServiceProvider extends ServiceProvider
             TokenTypeRepository::class,
             EloquentTokenTypeRepository::class,
         );
+
+        $this->app->when(ImportIncomesStrategy::class,)
+            ->needs(ImportRepository::class)
+            ->give(EloquentIncomeRepository::class);
+
+        $this->app->when(ImportStocksStrategy::class,)
+            ->needs(ImportRepository::class)
+            ->give(EloquentStockRepository::class);
+
+        $this->app->when(ImportSalesStrategy::class,)
+            ->needs(ImportRepository::class)
+            ->give(EloquentSaleRepository::class);
+
+        $this->app->when(ImportOrdersStrategy::class,)
+            ->needs(ImportRepository::class)
+            ->give(EloquentOrderRepository::class);
     }
 
     /**
@@ -109,8 +126,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        RateLimiter::for('wb_api', function ($job) {
-            return Limit::perMinute(12)->by($job->entity->value ?? 'global');
+        RateLimiter::for('api_integration', function ($job) {
+            if ($job instanceof ImportApiEntityJob) {
+                $token = $job->getToken();
+                $serviceName = strtolower($token->apiService->name);
+
+                $limit = match ($serviceName) {
+                    'wb', 'wildberries' => Limit::perMinute(24),
+                    default => Limit::perMinute(30),
+                };
+
+                //задаем лимиты только конкретному токену для конкретного сервиса (у разных сервисов разные лимиты)
+                return $limit->by($token->id);
+            }
+            return Limit::none();
         });
     }
 }
