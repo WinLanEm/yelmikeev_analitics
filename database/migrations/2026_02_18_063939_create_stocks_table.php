@@ -15,6 +15,7 @@ class CreateStocksTable extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('account_id')->constrained()->cascadeOnDelete();
             $table->date('date')->index();
             $table->date('last_change_date')->nullable();
             $table->string('supplier_article', 50)->nullable();
@@ -34,9 +35,8 @@ class CreateStocksTable extends Migration
             $table->string('sc_code', 50)->nullable();
             $table->decimal('price', 12, 2)->default(0);
             $table->integer('discount')->default(0);
+            $table->char('row_hash',32)->unique();
             $table->timestamps();
-
-            $table->unique(['date', 'last_change_date', 'supplier_article', 'warehouse_name', 'nm_id', 'barcode', 'sc_code', 'tech_size'],'stocks_unique_ids');
         });
     }
 

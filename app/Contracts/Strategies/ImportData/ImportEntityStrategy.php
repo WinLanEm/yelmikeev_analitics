@@ -2,7 +2,9 @@
 
 namespace App\Contracts\Strategies\ImportData;
 
+use App\Models\ApiToken;
+
 interface ImportEntityStrategy
 {
-    public function execute():void;
+    public function execute(ApiToken $token):void;
 }

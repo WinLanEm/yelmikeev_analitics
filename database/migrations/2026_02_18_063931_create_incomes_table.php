@@ -15,6 +15,7 @@ class CreateIncomesTable extends Migration
     {
         Schema::create('incomes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('account_id')->constrained()->cascadeOnDelete();
             $table->bigInteger('income_id')->index();
             $table->string('number')->nullable();
             $table->date('date')->index();
@@ -27,9 +28,10 @@ class CreateIncomesTable extends Migration
             $table->integer('quantity')->default(0);
             $table->decimal('total_price', 12, 2)->default(0);
             $table->string('warehouse_name')->nullable();
-            $table->timestamps();
 
-            $table->unique(['income_id', 'barcode', 'tech_size', 'supplier_article']);
+            $table->char('row_hash', 32)->unique();
+
+            $table->timestamps();
         });
     }
 

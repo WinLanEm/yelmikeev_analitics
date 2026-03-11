@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Stock extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'account_id',
         'date',
         'last_change_date',
         'supplier_article',
@@ -29,5 +31,15 @@ class Stock extends Model
         'sc_code',
         'price',
         'discount',
+        'row_hash',
     ];
+
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class);
+    }
 }

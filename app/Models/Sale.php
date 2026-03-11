@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Sale extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'account_id',
         'g_number',
         'date',
         'last_change_date',
@@ -37,5 +39,15 @@ class Sale extends Model
         'category',
         'brand',
         'is_storno',
+        'row_hash',
     ];
+
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class);
+    }
 }

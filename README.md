@@ -1,25 +1,30 @@
-# Подготовка окружения
+# Подготовка и запуск
 
-cp .env.example .env - там же доступы к бд
-
-# Устанавливаем зависимости (PHP)
-docker-compose --build
-
-docker-compose run app composer install
-
-docker-compose run app php artisan key:generate
-
-docker-compose run app npm install && npm run build
-
-docker-compose up -d
-
-# Запуск воркера
-
-docker-compose exec app php artisan queue:work
+docker-compose up --build -d
 
 # Работа
-При работе бд будут задержки, из-за удаленности сервера
 
-Импорт данных происходит через консольную команду команду
+Все консольные команды необходимо выполнять внутри контейнера app. Например, добавив префикс docker-compose exec app.
 
-php artisan api:import --entity= : sales, orders, stocks, incomes
+# Доступные консольные команды
+
+Создание компании:
+php artisan create:company --name="Название компании"
+
+Создание аккаунта:
+php artisan create:account --company_id=1 --name="Название аккаунта"
+
+Создание типа токена (например, bearer, api-key):
+php artisan create:token-type --name="api-key"
+
+Создание API сервиса (через запятую указываются ID поддерживаемых типов токенов):
+php artisan create:api-service --name="Wildberries" --types="1,2"
+
+Создание API токена для аккаунта:
+php artisan create:api-token --account_id=1 --api_service_id=1 --token_type_id=1 --token_value="ваш_токен"
+
+Запуск импорта данных:
+php artisan api:import --api_token_id=1
+
+Запуск импорта с указанием конкретных сущностей (через запятую, опционально):
+php artisan api:import --api_token_id=1 --entity="sales, orders, stocks, incomes"
