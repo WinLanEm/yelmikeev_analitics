@@ -1,6 +1,17 @@
-# Подготовка и запуск
+# Подготовка и запуск prod/dev
+cp .env.example .env
 
-docker-compose up --build -d
+# Dev
+В режиме разработки локальная папка с кодом монтируется в контейнер. Чтобы сервер не уходил в бесконечный перезапуск из-за отсутствия файлов, зависимости нужно установить ДО старта основного процесса.
+
+docker-compose run --rm app composer install
+
+docker-compose run --rm app npm install
+
+docker-compose up -d --build
+
+# Prod
+docker-compose -f docker-compose.prod.yml up -d --build
 
 # Работа
 
