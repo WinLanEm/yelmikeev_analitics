@@ -2,8 +2,10 @@
 
 namespace App\Console;
 
+use App\Models\ApiToken;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Artisan;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,7 +17,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            // Используем chunkById, чтобы не уронить память
+            ApiToken::query()->chunkById(100, function ($tokens) {
+                foreach ($tokens as $token) {
+                    Artisan::queue('api:import', [
+                        '--api_token_id' => $token->id
+                    ]);
+                }
+            });
+        })->twiceDaily(1, 13);
     }
 
     /**
