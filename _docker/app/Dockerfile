@@ -34,15 +34,18 @@ WORKDIR /var/www
 COPY _docker/app/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-COPY --chown=www-data:www-data composer.json composer.lock ./
-RUN composer install --optimize-autoloader --no-scripts
+COPY composer.json composer.lock ./
+RUN composer install --no-autoloader --no-scripts --no-dev
 
-COPY --chown=www-data:www-data . .
-RUN chmod -R 775 storage bootstrap/cache
-
-USER www-data
+COPY . .
 
 RUN composer install --optimize-autoloader --no-scripts --no-dev
-RUN npm install && npm run build
+
+RUN npm install
+
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage bootstrap/cache
+
+USER www-data
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
