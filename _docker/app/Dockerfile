@@ -31,11 +31,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 WORKDIR /var/www
 
+COPY _docker/app/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 COPY --chown=www-data:www-data composer.json composer.lock ./
 RUN composer install --optimize-autoloader --no-scripts
 
 COPY --chown=www-data:www-data . .
-
 RUN chmod -R 775 storage bootstrap/cache
 
 USER www-data
+
+RUN composer install --optimize-autoloader --no-scripts --no-dev
+RUN npm install && npm run build
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
