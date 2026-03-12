@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN pecl install swoole \
+RUN pecl install swoole-5.1.8 \
     && docker-php-ext-enable swoole
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
