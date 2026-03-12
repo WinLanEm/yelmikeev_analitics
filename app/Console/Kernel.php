@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
                 foreach ($tokens as $token) {
                     Artisan::queue('api:import', [
                         '--api_token_id' => $token->id
-                    ]);
+                    ])->onConnection('imports');
                 }
             });
         })->twiceDaily(1, 13);
